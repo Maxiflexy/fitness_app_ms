@@ -7,6 +7,9 @@ import com.maxiflexy.activityservice.model.Activity;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Service
 @RequiredArgsConstructor
 public class ActivityServiceImpl implements ActivityService{
@@ -26,11 +29,27 @@ public class ActivityServiceImpl implements ActivityService{
 
         var savedActivity = activityRepository.save(activity);
 
-        return mapTpResponse(savedActivity);
+        return mapToResponse(savedActivity);
 
     }
 
-    private ActivityResponse mapTpResponse(Activity activity){
+    @Override
+    public List<ActivityResponse> getUserActivities(String userId) {
+        List<Activity> activities = activityRepository.findByUserId(userId);
+
+        return activities.stream()
+                .map(this::mapToResponse)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public ActivityResponse getActivityById(String activityId) {
+        return activityRepository.findById(activityId)
+                .map(this::mapToResponse)
+                .orElseThrow(() -> new RuntimeException("Activity not found with id: " + activityId));
+    }
+
+    private ActivityResponse mapToResponse(Activity activity){
         var response = new ActivityResponse();
         response.setId(activity.getId());
         response.setUserId(activity.getUserId());
