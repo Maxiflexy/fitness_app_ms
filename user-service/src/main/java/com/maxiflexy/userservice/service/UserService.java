@@ -8,4 +8,5 @@ public interface UserService {
     UserResponseDTO getUserProfile(String userId);
 
     UserResponseDTO register(@Valid RegisterRequestDTO registerRequest);
+    Boolean existsByUserId(String userId);
 }

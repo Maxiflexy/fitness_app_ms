@@ -38,6 +38,11 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
+    public Boolean existsByUserId(String userId) {
+        return userRepository.existsById(userId);
+    }
+
+    @Override
     public UserResponseDTO getUserProfile(String userId) {
         User user = userRepository.findById(userId)
                 .orElseThrow( () -> new RuntimeException("User not found"));
